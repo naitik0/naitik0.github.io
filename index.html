@@ -1,1031 +1,841 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechModular - Interactive Experience</title>
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config={theme:{extend:{colors:{primary:'#00FFAA',secondary:'#0066FF'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-    <style>
-        :where([class^="ri-"])::before { content: "\f3c2"; }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #050A14;
-            color: #E5E7EB;
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Space Mono', monospace;
-        }
-        
-        .glass-effect {
-            background: rgba(13, 18, 30, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .grid-bg {
-            background-image: 
-                linear-gradient(rgba(0, 102, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 102, 255, 0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-        
-        .circuit-bg {
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%230066FF' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
-        }
-        
-        .neon-border {
-            box-shadow: 0 0 5px rgba(0, 255, 170, 0.5), 
-                        0 0 10px rgba(0, 255, 170, 0.3), 
-                        inset 0 0 5px rgba(0, 255, 170, 0.2);
-        }
-        
-        .terminal-text {
-            overflow: hidden;
-            border-right: 2px solid #00FFAA;
-            white-space: nowrap;
-            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
-        }
-        
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
-        
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: #00FFAA }
-        }
-        
-        .game-canvas {
-            background-color: #050A14;
-            border: 1px solid rgba(0, 255, 170, 0.3);
-        }
-        
-        .nav-link {
-            position: relative;
-            transition: all 0.3s;
-        }
-        
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: #00FFAA;
-            transition: width 0.3s;
-        }
-        
-        .nav-link:hover::after {
-            width: 100%;
-        }
-        
-        .custom-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-        
-        .custom-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(13, 18, 30, 0.7);
-            transition: .4s;
-            border-radius: 34px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: #00FFAA;
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        
-        .module {
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .module:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 102, 255, 0.2);
-        }
-        
-        .particle {
-            position: absolute;
-            background: #00FFAA;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            animation: fadeInOut 3s ease-in-out infinite;
-        }
-        
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: scale(0); }
-            50% { opacity: 0.5; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0); }
-        }
-        
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 6px;
-            background: rgba(13, 18, 30, 0.7);
-            border-radius: 5px;
-            outline: none;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #00FFAA;
-            cursor: pointer;
-            box-shadow: 0 0 5px rgba(0, 255, 170, 0.5);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cybi.me - Automation Solutions</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3b82f6',secondary:'#10b981'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+scroll-behavior: smooth;
+}
+.gradient-text {
+background: linear-gradient(90deg, #3b82f6, #10b981);
+-webkit-background-clip: text;
+background-clip: text;
+color: transparent;
+}
+.hero-bg {
+background-image: url('https://readdy.ai/api/search-image?query=abstract%20digital%20technology%20background%20with%20flowing%20data%20streams%2C%20code%20visualization%2C%20automation%20concept%2C%20blue%20and%20teal%20gradient%2C%20minimal%20design%2C%20clean%20workspace%2C%20technology%20mesh%20network%2C%20perfect%20for%20website%20hero%20section&width=1920&height=1080&seq=hero1&orientation=landscape');
+background-size: cover;
+background-position: center;
+}
+.workflow-card {
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.workflow-card:hover {
+transform: translateY(-8px);
+box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+.feature-card {
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+background: rgba(255, 255, 255, 0.8);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.feature-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+border: 1px solid rgba(59, 130, 246, 0.3);
+}
+.floating {
+animation: float 6s ease-in-out infinite;
+}
+@keyframes float {
+0% { transform: translateY(0px); }
+50% { transform: translateY(-20px); }
+100% { transform: translateY(0px); }
+}
+.typing-effect::after {
+content: "|";
+animation: blink 1s infinite;
+}
+@keyframes blink {
+0%, 100% { opacity: 1; }
+50% { opacity: 0; }
+}
+.particle {
+position: absolute;
+border-radius: 50%;
+background: rgba(59, 130, 246, 0.2);
+pointer-events: none;
+}
+.nav-link {
+position: relative;
+transition: color 0.3s ease;
+}
+.nav-link::after {
+content: '';
+position: absolute;
+width: 0;
+height: 2px;
+bottom: -4px;
+left: 0;
+background: linear-gradient(90deg, #3b82f6, #10b981);
+transition: width 0.3s ease;
+}
+.nav-link:hover::after {
+width: 100%;
+}
+.glow-button {
+position: relative;
+overflow: hidden;
+transition: all 0.3s ease;
+}
+.glow-button::before {
+content: '';
+position: absolute;
+top: -50%;
+left: -50%;
+width: 200%;
+height: 200%;
+background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+transform: rotate(45deg);
+transition: all 0.3s ease;
+}
+.glow-button:hover::before {
+left: 100%;
+}
+.custom-cursor {
+position: fixed;
+width: 20px;
+height: 20px;
+border-radius: 50%;
+background-color: rgba(59, 130, 246, 0.5);
+pointer-events: none;
+z-index: 9999;
+transform: translate(-50%, -50%);
+mix-blend-mode: difference;
+transition: transform 0.1s ease;
+}
+.workflow-image {
+transition: transform 0.3s ease;
+}
+.workflow-card:hover .workflow-image {
+transform: scale(1.05);
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+.custom-checkbox {
+position: relative;
+cursor: pointer;
+}
+.custom-checkbox input {
+position: absolute;
+opacity: 0;
+cursor: pointer;
+}
+.checkmark {
+position: absolute;
+top: 0;
+left: 0;
+height: 20px;
+width: 20px;
+background-color: #fff;
+border: 2px solid #e2e8f0;
+border-radius: 4px;
+transition: all 0.2s ease;
+}
+.custom-checkbox:hover input ~ .checkmark {
+border-color: #3b82f6;
+}
+.custom-checkbox input:checked ~ .checkmark {
+background-color: #3b82f6;
+border-color: #3b82f6;
+}
+.checkmark:after {
+content: "";
+position: absolute;
+display: none;
+}
+.custom-checkbox input:checked ~ .checkmark:after {
+display: block;
+}
+.custom-checkbox .checkmark:after {
+left: 6px;
+top: 2px;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+}
+.custom-switch {
+position: relative;
+display: inline-block;
+width: 50px;
+height: 24px;
+}
+.custom-switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+.switch-slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #e2e8f0;
+transition: .4s;
+border-radius: 34px;
+}
+.switch-slider:before {
+position: absolute;
+content: "";
+height: 18px;
+width: 18px;
+left: 3px;
+bottom: 3px;
+background-color: white;
+transition: .4s;
+border-radius: 50%;
+}
+input:checked + .switch-slider {
+background-color: #3b82f6;
+}
+input:checked + .switch-slider:before {
+transform: translateX(26px);
+}
+.fade-in {
+opacity: 0;
+transform: translateY(20px);
+transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in.visible {
+opacity: 1;
+transform: translateY(0);
+}
+.stagger-item {
+opacity: 0;
+transform: translateY(20px);
+}
+</style>
 </head>
-<body class="grid-bg min-h-screen">
-    <!-- Header -->
-    <header class="glass-effect sticky top-0 z-50 py-4">
-        <div class="container mx-auto px-6 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-primary to-secondary rounded-lg">
-                    <span class="font-['Pacifico'] text-white text-xl">logo</span>
-                </div>
-                <span class="font-['Space_Mono'] font-bold text-xl text-white">TechModular</span>
-            </div>
-            
-            <nav class="hidden md:flex items-center space-x-8">
-                <a href="#" class="nav-link text-white hover:text-primary">Home</a>
-                <a href="#game" class="nav-link text-white hover:text-primary">Game</a>
-                <a href="#features" class="nav-link text-white hover:text-primary">Features</a>
-                <a href="#about" class="nav-link text-white hover:text-primary">About</a>
-                <a href="#contact" class="nav-link text-white hover:text-primary">Contact</a>
-            </nav>
-            
-            <div class="flex items-center space-x-4">
-                <button class="bg-gradient-to-r from-primary to-secondary text-black font-medium py-2 px-6 !rounded-button whitespace-nowrap hover:opacity-90 transition-opacity">
-                    Get Started
-                </button>
-                <div class="w-10 h-10 flex items-center justify-center text-white cursor-pointer md:hidden">
-                    <i class="ri-menu-line ri-lg"></i>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="relative overflow-hidden py-20 md:py-32">
-        <div class="absolute inset-0 circuit-bg opacity-30"></div>
-        <div id="particles-container" class="absolute inset-0"></div>
-        
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6">
-                    <div class="inline-block glass-effect px-4 py-2 rounded-full text-primary text-sm font-medium mb-4">
-                        <span class="mr-2">◉</span> Version 2.5.0 Released
-                    </div>
-                    <h1 class="font-['Space_Mono'] text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                        <span class="terminal-text">Navigate Through</span>
-                        <span class="block mt-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Interactive Modules</span>
-                    </h1>
-                    <p class="text-gray-300 text-lg md:text-xl max-w-lg">
-                        Experience our website through an innovative game interface. Explore features, unlock content, and discover a new way of digital interaction.
-                    </p>
-                    <div class="flex flex-wrap gap-4 pt-4">
-                        <button class="bg-primary text-black font-medium py-3 px-8 !rounded-button whitespace-nowrap hover:opacity-90 transition-opacity flex items-center">
-                            <i class="ri-gamepad-line ri-lg mr-2"></i> Play Now
-                        </button>
-                        <button class="bg-transparent border border-white/20 text-white font-medium py-3 px-8 !rounded-button whitespace-nowrap hover:bg-white/5 transition-all flex items-center">
-                            <i class="ri-information-line ri-lg mr-2"></i> Learn More
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="glass-effect p-6 rounded-2xl neon-border relative overflow-hidden">
-                    <div class="absolute top-4 left-4 flex space-x-2">
-                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                        <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                    </div>
-                    <div class="pt-6">
-                        <div class="text-xs text-gray-400 font-mono mb-2">// Interactive Preview</div>
-                        <div class="bg-[#050A14] p-4 rounded-lg border border-gray-800">
-                            <div class="flex justify-between items-center mb-4">
-                                <div class="text-primary font-['Space_Mono'] font-bold">SYSTEM BOOT</div>
-                                <div class="text-xs text-gray-400">06.04.2025</div>
-                            </div>
-                            <div class="space-y-2 text-sm font-mono">
-                                <div class="text-gray-400">$ initializing modules...</div>
-                                <div class="text-gray-400">$ loading interface...</div>
-                                <div class="text-gray-400">$ connecting to network...</div>
-                                <div class="text-primary">$ system ready</div>
-                                <div class="flex items-center">
-                                    <span class="text-white mr-1">$</span>
-                                    <span class="text-white terminal-text">launch game_module.exe</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4 flex justify-between items-center">
-                            <div class="flex space-x-3">
-                                <div class="w-8 h-8 flex items-center justify-center bg-gray-800 rounded-full">
-                                    <i class="ri-refresh-line text-primary"></i>
-                                </div>
-                                <div class="w-8 h-8 flex items-center justify-center bg-gray-800 rounded-full">
-                                    <i class="ri-code-line text-primary"></i>
-                                </div>
-                            </div>
-                            <div class="text-xs text-gray-400 font-mono">Ready to launch</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Game Section -->
-    <section id="game" class="py-20 relative">
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#080E1A] z-0"></div>
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="text-center mb-12">
-                <h2 class="font-['Space_Mono'] text-3xl md:text-4xl font-bold text-white mb-4">
-                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Interactive</span> Module Game
-                </h2>
-                <p class="text-gray-300 max-w-2xl mx-auto">
-                    Navigate through our digital maze to discover features and content. Control the module and collect data points to unlock new sections.
-                </p>
-            </div>
-            
-            <div class="glass-effect p-6 rounded-2xl neon-border max-w-4xl mx-auto">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="font-['Space_Mono'] text-lg text-primary">TECH NAVIGATOR</div>
-                    <div class="flex items-center space-x-4">
-                        <div class="text-sm text-gray-300">
-                            <span class="text-primary font-mono">SCORE:</span> <span id="game-score">0</span>
-                        </div>
-                        <div class="text-sm text-gray-300">
-                            <span class="text-primary font-mono">LEVEL:</span> <span id="game-level">1</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="relative">
-                    <canvas id="game-canvas" class="game-canvas w-full h-[400px] rounded-lg"></canvas>
-                    <div id="game-overlay" class="absolute inset-0 flex items-center justify-center bg-black/70 rounded-lg">
-                        <div class="text-center">
-                            <h3 class="font-['Space_Mono'] text-2xl text-primary mb-4">Tech Navigator</h3>
-                            <p class="text-gray-300 mb-6 max-w-md">Navigate through the digital maze to discover website features</p>
-                            <button id="start-game" class="bg-primary text-black font-medium py-2 px-6 !rounded-button whitespace-nowrap hover:opacity-90 transition-opacity">
-                                Start Game
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="glass-effect p-3 rounded-lg">
-                        <div class="text-xs text-gray-400 mb-1">Game Speed</div>
-                        <input type="range" id="game-speed" min="1" max="10" value="5" class="w-full">
-                    </div>
-                    <div class="glass-effect p-3 rounded-lg">
-                        <div class="text-xs text-gray-400 mb-1">Difficulty</div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs">Easy</span>
-                            <label class="custom-switch">
-                                <input type="checkbox" id="difficulty-toggle">
-                                <span class="slider"></span>
-                            </label>
-                            <span class="text-xs">Hard</span>
-                        </div>
-                    </div>
-                    <div class="glass-effect p-3 rounded-lg">
-                        <div class="text-xs text-gray-400 mb-1">Sound</div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs">Off</span>
-                            <label class="custom-switch">
-                                <input type="checkbox" id="sound-toggle" checked>
-                                <span class="slider"></span>
-                            </label>
-                            <span class="text-xs">On</span>
-                        </div>
-                    </div>
-                    <div class="glass-effect p-3 rounded-lg flex flex-col justify-between">
-                        <div class="text-xs text-gray-400">Controls</div>
-                        <div class="text-xs text-center mt-1">Arrow Keys or WASD</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="py-20">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="font-['Space_Mono'] text-3xl md:text-4xl font-bold text-white mb-4">
-                    Modular <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Features</span>
-                </h2>
-                <p class="text-gray-300 max-w-2xl mx-auto">
-                    Discover our innovative tech modules designed to enhance your digital experience.
-                </p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Feature 1 -->
-                <div class="glass-effect p-6 rounded-2xl module">
-                    <div class="w-14 h-14 flex items-center justify-center bg-primary/10 rounded-xl mb-6">
-                        <i class="ri-cpu-line ri-2x text-primary"></i>
-                    </div>
-                    <h3 class="font-['Space_Mono'] text-xl font-bold text-white mb-3">Quantum Processing</h3>
-                    <p class="text-gray-300 mb-4">
-                        Experience lightning-fast performance with our advanced quantum processing technology.
-                    </p>
-                    <a href="#" class="text-primary flex items-center text-sm hover:underline">
-                        Learn more <i class="ri-arrow-right-line ml-1"></i>
-                    </a>
-                </div>
-                
-                <!-- Feature 2 -->
-                <div class="glass-effect p-6 rounded-2xl module">
-                    <div class="w-14 h-14 flex items-center justify-center bg-secondary/10 rounded-xl mb-6">
-                        <i class="ri-shield-keyhole-line ri-2x text-secondary"></i>
-                    </div>
-                    <h3 class="font-['Space_Mono'] text-xl font-bold text-white mb-3">Neural Security</h3>
-                    <p class="text-gray-300 mb-4">
-                        Advanced protection systems that adapt and learn from potential threats in real-time.
-                    </p>
-                    <a href="#" class="text-secondary flex items-center text-sm hover:underline">
-                        Learn more <i class="ri-arrow-right-line ml-1"></i>
-                    </a>
-                </div>
-                
-                <!-- Feature 3 -->
-                <div class="glass-effect p-6 rounded-2xl module">
-                    <div class="w-14 h-14 flex items-center justify-center bg-primary/10 rounded-xl mb-6">
-                        <i class="ri-vip-diamond-line ri-2x text-primary"></i>
-                    </div>
-                    <h3 class="font-['Space_Mono'] text-xl font-bold text-white mb-3">Holographic Interface</h3>
-                    <p class="text-gray-300 mb-4">
-                        Immersive 3D interfaces that bring your digital experience to a new dimension.
-                    </p>
-                    <a href="#" class="text-primary flex items-center text-sm hover:underline">
-                        Learn more <i class="ri-arrow-right-line ml-1"></i>
-                    </a>
-                </div>
-                
-                <!-- Feature 4 -->
-                <div class="glass-effect p-6 rounded-2xl module">
-                    <div class="w-14 h-14 flex items-center justify-center bg-secondary/10 rounded-xl mb-6">
-                        <i class="ri-database-2-line ri-2x text-secondary"></i>
-                    </div>
-                    <h3 class="font-['Space_Mono'] text-xl font-bold text-white mb-3">Quantum Storage</h3>
-                    <p class="text-gray-300 mb-4">
-                        Unlimited storage capacity with instantaneous access and quantum encryption.
-                    </p>
-                    <a href="#" class="text-secondary flex items-center text-sm hover:underline">
-                        Learn more <i class="ri-arrow-right-line ml-1"></i>
-                    </a>
-                </div>
-                
-                <!-- Feature 5 -->
-                <div class="glass-effect p-6 rounded-2xl module">
-                    <div class="w-14 h-14 flex items-center justify-center bg-primary/10 rounded-xl mb-6">
-                        <i class="ri-robot-line ri-2x text-primary"></i>
-                    </div>
-                    <h3 class="font-['Space_Mono'] text-xl font-bold text-white mb-3">AI Integration</h3>
-                    <p class="text-gray-300 mb-4">
-                        Seamless artificial intelligence that learns and adapts to your unique preferences.
-                    </p>
-                    <a href="#" class="text-primary flex items-center text-sm hover:underline">
-                        Learn more <i class="ri-arrow-right-line ml-1"></i>
-                    </a>
-                </div>
-                
-                <!-- Feature 6 -->
-                <div class="glass-effect p-6 rounded-2xl module">
-                    <div class="w-14 h-14 flex items-center justify-center bg-secondary/10 rounded-xl mb-6">
-                        <i class="ri-global-line ri-2x text-secondary"></i>
-                    </div>
-                    <h3 class="font-['Space_Mono'] text-xl font-bold text-white mb-3">Neural Network</h3>
-                    <p class="text-gray-300 mb-4">
-                        Connect with global systems through our advanced neural networking technology.
-                    </p>
-                    <a href="#" class="text-secondary flex items-center text-sm hover:underline">
-                        Learn more <i class="ri-arrow-right-line ml-1"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-20 relative">
-        <div class="absolute inset-0 circuit-bg opacity-20"></div>
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="glass-effect p-6 rounded-2xl neon-border">
-                    <div class="bg-[#050A14] p-4 rounded-lg border border-gray-800 h-[300px] flex flex-col justify-center items-center">
-                        <div class="w-24 h-24 flex items-center justify-center bg-primary/10 rounded-full mb-6">
-                            <i class="ri-code-box-line ri-3x text-primary"></i>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-['Space_Mono'] text-xl font-bold text-white mb-2">TechModular OS</div>
-                            <div class="text-gray-400 text-sm">Version 2.5.0 (Build 20250604)</div>
-                            <div class="mt-4 text-xs text-gray-500">© 2025 TechModular Systems</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="space-y-6">
-                    <h2 class="font-['Space_Mono'] text-3xl md:text-4xl font-bold text-white mb-4">
-                        About <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">TechModular</span>
-                    </h2>
-                    <p class="text-gray-300">
-                        Founded in 2023, TechModular is revolutionizing the way users interact with digital interfaces. Our modular approach to technology allows for seamless integration and personalized experiences.
-                    </p>
-                    <p class="text-gray-300">
-                        We believe that technology should adapt to humans, not the other way around. Our innovative game-based navigation system represents our commitment to creating intuitive and engaging digital experiences.
-                    </p>
-                    <div class="pt-4 grid grid-cols-2 gap-4">
-                        <div class="glass-effect p-4 rounded-xl">
-                            <div class="text-3xl font-bold text-primary mb-2">250+</div>
-                            <div class="text-gray-400 text-sm">Global Partners</div>
-                        </div>
-                        <div class="glass-effect p-4 rounded-xl">
-                            <div class="text-3xl font-bold text-secondary mb-2">15M+</div>
-                            <div class="text-gray-400 text-sm">Active Users</div>
-                        </div>
-                        <div class="glass-effect p-4 rounded-xl">
-                            <div class="text-3xl font-bold text-primary mb-2">98%</div>
-                            <div class="text-gray-400 text-sm">Satisfaction Rate</div>
-                        </div>
-                        <div class="glass-effect p-4 rounded-xl">
-                            <div class="text-3xl font-bold text-secondary mb-2">24/7</div>
-                            <div class="text-gray-400 text-sm">Technical Support</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="py-20">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="font-['Space_Mono'] text-3xl md:text-4xl font-bold text-white mb-4">
-                    User <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Feedback</span>
-                </h2>
-                <p class="text-gray-300 max-w-2xl mx-auto">
-                    See what our users are saying about the TechModular experience.
-                </p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Testimonial 1 -->
-                <div class="glass-effect p-6 rounded-2xl module">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-black font-bold text-lg mr-4">
-                            JD
-                        </div>
-                        <div>
-                            <div class="text-white font-medium">James Davidson</div>
-                            <div class="text-gray-400 text-sm">Software Engineer</div>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 mb-4">
-                        "The interactive game navigation is brilliant! It makes exploring a website fun and engaging. I've never experienced anything like it before."
-                    </p>
-                    <div class="flex text-primary">
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                    </div>
-                </div>
-                
-                <!-- Testimonial 2 -->
-                <div class="glass-effect p-6 rounded-2xl module">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-black font-bold text-lg mr-4">
-                            EL
-                        </div>
-                        <div>
-                            <div class="text-white font-medium">Elena Lindstrom</div>
-                            <div class="text-gray-400 text-sm">UX Designer</div>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 mb-4">
-                        "As a designer, I appreciate the attention to detail in the interface. The modular approach makes everything intuitive while maintaining visual appeal."
-                    </p>
-                    <div class="flex text-primary">
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-half-fill"></i>
-                    </div>
-                </div>
-                
-                <!-- Testimonial 3 -->
-                <div class="glass-effect p-6 rounded-2xl module">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-black font-bold text-lg mr-4">
-                            MK
-                        </div>
-                        <div>
-                            <div class="text-white font-medium">Michael Kincaid</div>
-                            <div class="text-gray-400 text-sm">Tech Entrepreneur</div>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 mb-4">
-                        "TechModular has revolutionized how I think about web interfaces. The game integration is not just a gimmick - it actually enhances the user experience."
-                    </p>
-                    <div class="flex text-primary">
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 relative">
-        <div class="absolute inset-0 bg-gradient-to-t from-[#050A14] to-transparent z-0"></div>
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="max-w-4xl mx-auto glass-effect p-8 rounded-2xl neon-border">
-                <div class="text-center mb-8">
-                    <h2 class="font-['Space_Mono'] text-3xl font-bold text-white mb-4">
-                        Get in <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Touch</span>
-                    </h2>
-                    <p class="text-gray-300">
-                        Have questions or feedback? We'd love to hear from you.
-                    </p>
-                </div>
-                
-                <form class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-gray-300 text-sm mb-2" for="name">Name</label>
-                        <input type="text" id="name" class="w-full bg-[#0D121E] border border-gray-700 rounded-lg p-3 text-white focus:border-primary focus:outline-none" placeholder="Your name">
-                    </div>
-                    <div>
-                        <label class="block text-gray-300 text-sm mb-2" for="email">Email</label>
-                        <input type="email" id="email" class="w-full bg-[#0D121E] border border-gray-700 rounded-lg p-3 text-white focus:border-primary focus:outline-none" placeholder="Your email">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-gray-300 text-sm mb-2" for="subject">Subject</label>
-                        <input type="text" id="subject" class="w-full bg-[#0D121E] border border-gray-700 rounded-lg p-3 text-white focus:border-primary focus:outline-none" placeholder="Message subject">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-gray-300 text-sm mb-2" for="message">Message</label>
-                        <textarea id="message" rows="4" class="w-full bg-[#0D121E] border border-gray-700 rounded-lg p-3 text-white focus:border-primary focus:outline-none" placeholder="Your message"></textarea>
-                    </div>
-                    <div class="md:col-span-2">
-                        <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-black font-medium py-3 !rounded-button whitespace-nowrap hover:opacity-90 transition-opacity">
-                            Send Message
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-12 border-t border-gray-800">
-        <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-4 gap-8 mb-12">
-                <div>
-                    <div class="flex items-center space-x-2 mb-6">
-                        <div class="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-primary to-secondary rounded-lg">
-                            <span class="font-['Pacifico'] text-white text-xl">logo</span>
-                        </div>
-                        <span class="font-['Space_Mono'] font-bold text-xl text-white">TechModular</span>
-                    </div>
-                    <p class="text-gray-400 mb-4">
-                        Revolutionizing digital interactions through modular, game-based experiences.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 text-gray-300 hover:bg-primary hover:text-black transition-colors">
-                            <i class="ri-twitter-x-line"></i>
-                        </a>
-                        <a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 text-gray-300 hover:bg-primary hover:text-black transition-colors">
-                            <i class="ri-linkedin-line"></i>
-                        </a>
-                        <a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 text-gray-300 hover:bg-primary hover:text-black transition-colors">
-                            <i class="ri-github-line"></i>
-                        </a>
-                        <a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 text-gray-300 hover:bg-primary hover:text-black transition-colors">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <div>
-                    <h3 class="font-['Space_Mono'] font-bold text-white mb-6">Quick Links</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">Home</a></li>
-                        <li><a href="#game" class="text-gray-400 hover:text-primary transition-colors">Game</a></li>
-                        <li><a href="#features" class="text-gray-400 hover:text-primary transition-colors">Features</a></li>
-                        <li><a href="#about" class="text-gray-400 hover:text-primary transition-colors">About Us</a></li>
-                        <li><a href="#contact" class="text-gray-400 hover:text-primary transition-colors">Contact</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="font-['Space_Mono'] font-bold text-white mb-6">Resources</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">Documentation</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">API Reference</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">Tutorials</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">Blog</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors">Support</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="font-['Space_Mono'] font-bold text-white mb-6">Subscribe</h3>
-                    <p class="text-gray-400 mb-4">
-                        Stay updated with our latest features and releases.
-                    </p>
-                    <form class="flex">
-                        <input type="email" class="flex-grow bg-[#0D121E] border border-gray-700 rounded-l-lg p-2 text-white focus:border-primary focus:outline-none" placeholder="Your email">
-                        <button type="submit" class="bg-primary text-black font-medium p-2 rounded-r-lg hover:opacity-90 transition-opacity whitespace-nowrap">
-                            Subscribe
-                        </button>
-                    </form>
-                </div>
-            </div>
-            
-            <div class="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
-                <div class="text-gray-400 text-sm mb-4 md:mb-0">
-                    © 2025 TechModular. All rights reserved.
-                </div>
-                <div class="flex space-x-4 text-sm">
-                    <a href="#" class="text-gray-400 hover:text-primary transition-colors">Privacy Policy</a>
-                    <a href="#" class="text-gray-400 hover:text-primary transition-colors">Terms of Service</a>
-                    <a href="#" class="text-gray-400 hover:text-primary transition-colors">Cookie Policy</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script id="particles-script">
-        document.addEventListener('DOMContentLoaded', function() {
-            const particlesContainer = document.getElementById('particles-container');
-            
-            function createParticle() {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random size between 2px and 6px
-                const size = Math.random() * 4 + 2;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random position
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                particle.style.left = `${posX}%`;
-                particle.style.top = `${posY}%`;
-                
-                // Random animation duration
-                const duration = Math.random() * 3 + 2;
-                particle.style.animationDuration = `${duration}s`;
-                
-                particlesContainer.appendChild(particle);
-                
-                // Remove particle after animation completes
-                setTimeout(() => {
-                    particle.remove();
-                }, duration * 1000);
-            }
-            
-            // Create particles at intervals
-            setInterval(createParticle, 200);
-            
-            // Create initial particles
-            for (let i = 0; i < 20; i++) {
-                createParticle();
-            }
-        });
-    </script>
-
-    <script id="game-script">
-        document.addEventListener('DOMContentLoaded', function() {
-            const canvas = document.getElementById('game-canvas');
-            const ctx = canvas.getContext('2d');
-            const overlay = document.getElementById('game-overlay');
-            const startButton = document.getElementById('start-game');
-            const scoreDisplay = document.getElementById('game-score');
-            const levelDisplay = document.getElementById('game-level');
-            const speedSlider = document.getElementById('game-speed');
-            const difficultyToggle = document.getElementById('difficulty-toggle');
-            const soundToggle = document.getElementById('sound-toggle');
-            
-            // Set canvas dimensions
-            function resizeCanvas() {
-                canvas.width = canvas.offsetWidth;
-                canvas.height = canvas.offsetHeight;
-            }
-            
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            
-            // Game variables
-            let gameRunning = false;
-            let score = 0;
-            let level = 1;
-            let playerX = 50;
-            let playerY = 50;
-            let playerSize = 15;
-            let playerSpeed = 5;
-            let targets = [];
-            let obstacles = [];
-            let gameLoopId;
-            
-            // Key states
-            const keys = {
-                ArrowUp: false,
-                ArrowDown: false,
-                ArrowLeft: false,
-                ArrowRight: false,
-                w: false,
-                a: false,
-                s: false,
-                d: false
-            };
-            
-            // Initialize game
-            function initGame() {
-                playerX = canvas.width / 2;
-                playerY = canvas.height / 2;
-                score = 0;
-                level = 1;
-                targets = [];
-                obstacles = [];
-                
-                // Create initial targets
-                for (let i = 0; i < 5; i++) {
-                    createTarget();
-                }
-                
-                // Create initial obstacles
-                if (difficultyToggle.checked) {
-                    for (let i = 0; i < 3; i++) {
-                        createObstacle();
-                    }
-                }
-                
-                scoreDisplay.textContent = score;
-                levelDisplay.textContent = level;
-            }
-            
-            // Create a new target
-            function createTarget() {
-                const size = Math.random() * 10 + 10;
-                targets.push({
-                    x: Math.random() * (canvas.width - size),
-                    y: Math.random() * (canvas.height - size),
-                    size: size,
-                    color: '#00FFAA'
-                });
-            }
-            
-            // Create a new obstacle
-            function createObstacle() {
-                const width = Math.random() * 60 + 40;
-                const height = Math.random() * 60 + 40;
-                obstacles.push({
-                    x: Math.random() * (canvas.width - width),
-                    y: Math.random() * (canvas.height - height),
-                    width: width,
-                    height: height,
-                    color: '#FF3366'
-                });
-            }
-            
-            // Game loop
-            function gameLoop() {
-                // Clear canvas
-                ctx.fillStyle = '#050A14';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                // Draw grid
-                ctx.strokeStyle = 'rgba(0, 102, 255, 0.1)';
-                ctx.lineWidth = 1;
-                
-                const gridSize = 20;
-                for (let x = 0; x < canvas.width; x += gridSize) {
-                    ctx.beginPath();
-                    ctx.moveTo(x, 0);
-                    ctx.lineTo(x, canvas.height);
-                    ctx.stroke();
-                }
-                
-                for (let y = 0; y < canvas.height; y += gridSize) {
-                    ctx.beginPath();
-                    ctx.moveTo(0, y);
-                    ctx.lineTo(canvas.width, y);
-                    ctx.stroke();
-                }
-                
-                // Update player position based on key presses
-                if (keys.ArrowUp || keys.w) playerY -= playerSpeed;
-                if (keys.ArrowDown || keys.s) playerY += playerSpeed;
-                if (keys.ArrowLeft || keys.a) playerX -= playerSpeed;
-                if (keys.ArrowRight || keys.d) playerX += playerSpeed;
-                
-                // Keep player within bounds
-                playerX = Math.max(playerSize, Math.min(canvas.width - playerSize, playerX));
-                playerY = Math.max(playerSize, Math.min(canvas.height - playerSize, playerY));
-                
-                // Draw obstacles
-                obstacles.forEach(obstacle => {
-                    ctx.fillStyle = obstacle.color;
-                    ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
-                    
-                    // Check for collision with player
-                    if (playerX + playerSize > obstacle.x && 
-                        playerX - playerSize < obstacle.x + obstacle.width &&
-                        playerY + playerSize > obstacle.y && 
-                        playerY - playerSize < obstacle.y + obstacle.height) {
-                        // Game over
-                        stopGame();
-                        overlay.style.display = 'flex';
-                        startButton.textContent = 'Try Again';
-                    }
-                });
-                
-                // Draw targets
-                targets.forEach((target, index) => {
-                    ctx.fillStyle = target.color;
-                    ctx.beginPath();
-                    ctx.arc(target.x, target.y, target.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    // Check for collision with player
-                    const dx = playerX - target.x;
-                    const dy = playerY - target.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < playerSize + target.size) {
-                        // Collect target
-                        targets.splice(index, 1);
-                        score += 10;
-                        scoreDisplay.textContent = score;
-                        
-                        // Create new target
-                        createTarget();
-                        
-                        // Level up every 50 points
-                        if (score % 50 === 0) {
-                            level++;
-                            levelDisplay.textContent = level;
-                            playerSpeed += 0.5;
-                            
-                            if (difficultyToggle.checked) {
-                                createObstacle();
-                            }
-                        }
-                    }
-                });
-                
-                // Draw player
-                ctx.fillStyle = '#0066FF';
-                ctx.beginPath();
-                ctx.arc(playerX, playerY, playerSize, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Draw player glow
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = '#0066FF';
-                ctx.beginPath();
-                ctx.arc(playerX, playerY, playerSize, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.shadowBlur = 0;
-                
-                // Continue game loop
-                gameLoopId = requestAnimationFrame(gameLoop);
-            }
-            
-            // Start game
-            function startGame() {
-                if (!gameRunning) {
-                    initGame();
-                    overlay.style.display = 'none';
-                    gameRunning = true;
-                    gameLoop();
-                }
-            }
-            
-            // Stop game
-            function stopGame() {
-                gameRunning = false;
-                cancelAnimationFrame(gameLoopId);
-            }
-            
-            // Event listeners
-            startButton.addEventListener('click', startGame);
-            
-            window.addEventListener('keydown', function(e) {
-                if (keys.hasOwnProperty(e.key)) {
-                    keys[e.key] = true;
-                }
-            });
-            
-            window.addEventListener('keyup', function(e) {
-                if (keys.hasOwnProperty(e.key)) {
-                    keys[e.key] = false;
-                }
-            });
-            
-            speedSlider.addEventListener('input', function() {
-                playerSpeed = parseInt(this.value);
-            });
-            
-            difficultyToggle.addEventListener('change', function() {
-                if (gameRunning) {
-                    if (this.checked) {
-                        // Add obstacles
-                        for (let i = 0; i < 3; i++) {
-                            createObstacle();
-                        }
-                    } else {
-                        // Remove obstacles
-                        obstacles = [];
-                    }
-                }
-            });
-        });
-    </script>
-
-    <script id="mobile-menu-script">
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuButton = document.querySelector('.ri-menu-line').parentElement;
-            const nav = document.querySelector('nav');
-            
-            menuButton.addEventListener('click', function() {
-                if (nav.classList.contains('hidden')) {
-                    nav.classList.remove('hidden');
-                    nav.classList.add('flex', 'flex-col', 'absolute', 'top-16', 'left-0', 'right-0', 'bg-[#050A14]', 'p-4', 'glass-effect', 'space-y-4');
-                } else {
-                    nav.classList.add('hidden');
-                    nav.classList.remove('flex', 'flex-col', 'absolute', 'top-16', 'left-0', 'right-0', 'bg-[#050A14]', 'p-4', 'glass-effect', 'space-y-4');
-                }
-            });
-            
-            // Close menu when clicking on a link
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    if (window.innerWidth < 768) {
-                        nav.classList.add('hidden');
-                        nav.classList.remove('flex', 'flex-col', 'absolute', 'top-16', 'left-0', 'right-0', 'bg-[#050A14]', 'p-4', 'glass-effect', 'space-y-4');
-                    }
-                });
-            });
-        });
-    </script>
+<body class="bg-white">
+<div id="custom-cursor" class="custom-cursor hidden md:block"></div>
+<!-- Header -->
+<header class="fixed w-full bg-white bg-opacity-90 backdrop-blur-md z-50 shadow-sm">
+<div class="container mx-auto px-6 py-4 flex justify-between items-center">
+<a href="#" class="text-3xl font-['Pacifico'] text-primary hover:scale-105 transition-transform duration-300">Cybi.me</a>
+<nav class="hidden md:flex space-x-8">
+<a href="#features" class="nav-link text-gray-700 hover:text-primary font-medium">Features</a>
+<a href="#workflows" class="nav-link text-gray-700 hover:text-primary font-medium">Workflows</a>
+<a href="#documentation" class="nav-link text-gray-700 hover:text-primary font-medium">Documentation</a>
+<a href="#contact" class="nav-link text-gray-700 hover:text-primary font-medium">Contact</a>
+</nav>
+<div class="md:hidden flex items-center">
+<button id="mobile-menu-button" class="w-10 h-10 flex items-center justify-center text-gray-700">
+<i class="ri-menu-line ri-2x"></i>
+</button>
+</div>
+</div>
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="hidden md:hidden bg-white w-full py-4 px-6 shadow-md">
+<div class="flex flex-col space-y-4">
+<a href="#features" class="text-gray-700 hover:text-primary font-medium py-2">Features</a>
+<a href="#workflows" class="text-gray-700 hover:text-primary font-medium py-2">Workflows</a>
+<a href="#documentation" class="text-gray-700 hover:text-primary font-medium py-2">Documentation</a>
+<a href="#contact" class="text-gray-700 hover:text-primary font-medium py-2">Contact</a>
+</div>
+</div>
+</header>
+<!-- Hero Section -->
+<section class="hero-bg min-h-screen flex items-center pt-20 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent"></div>
+<div class="container mx-auto px-6 py-16 relative z-10">
+<div class="max-w-3xl">
+<h1 class="text-4xl md:text-6xl font-bold text-white mb-6 typing-effect" id="typing-text">Automate Your Workflow</h1>
+<p class="text-xl md:text-2xl text-white/90 mb-8">Powerful automation solutions with n8n and custom integrations to streamline your business processes.</p>
+<div class="flex flex-col sm:flex-row gap-4">
+<a href="#workflows" class="glow-button bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-8 !rounded-button shadow-lg transition-all duration-300 whitespace-nowrap">
+Explore Workflows
+</a>
+<a href="#documentation" class="glow-button bg-white hover:bg-gray-100 text-primary font-semibold py-3 px-8 !rounded-button shadow-lg transition-all duration-300 whitespace-nowrap">
+View Documentation
+</a>
+</div>
+</div>
+</div>
+<!-- Animated Particles -->
+<div id="particles-container" class="absolute inset-0 pointer-events-none"></div>
+</section>
+<!-- Features Section -->
+<section id="features" class="py-20 bg-gray-50 relative overflow-hidden">
+<div class="container mx-auto px-6">
+<div class="text-center mb-16 fade-in">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Powerful Automation Features</h2>
+<p class="text-lg text-gray-600 max-w-3xl mx-auto">Streamline your workflow with our comprehensive suite of automation tools and integrations.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="feature-card p-8 rounded-lg shadow-md stagger-item">
+<div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+<i class="ri-flow-chart-line ri-2x text-primary"></i>
+</div>
+<h3 class="text-xl font-semibold mb-3">Visual Workflow Builder</h3>
+<p class="text-gray-600">Create complex automation workflows with our intuitive drag-and-drop interface. No coding required.</p>
+</div>
+<div class="feature-card p-8 rounded-lg shadow-md stagger-item">
+<div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+<i class="ri-api-line ri-2x text-secondary"></i>
+</div>
+<h3 class="text-xl font-semibold mb-3">API Integrations</h3>
+<p class="text-gray-600">Connect with over 200+ services and APIs to create seamless automation between your favorite tools.</p>
+</div>
+<div class="feature-card p-8 rounded-lg shadow-md stagger-item">
+<div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6">
+<i class="ri-timer-line ri-2x text-purple-600"></i>
+</div>
+<h3 class="text-xl font-semibold mb-3">Scheduled Triggers</h3>
+<p class="text-gray-600">Set up time-based workflows that run on schedules, intervals, or specific dates and times.</p>
+</div>
+<div class="feature-card p-8 rounded-lg shadow-md stagger-item">
+<div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-6">
+<i class="ri-code-box-line ri-2x text-orange-500"></i>
+</div>
+<h3 class="text-xl font-semibold mb-3">Custom Code Execution</h3>
+<p class="text-gray-600">Run custom JavaScript, Python, or shell scripts within your workflows for advanced functionality.</p>
+</div>
+<div class="feature-card p-8 rounded-lg shadow-md stagger-item">
+<div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-6">
+<i class="ri-error-warning-line ri-2x text-red-500"></i>
+</div>
+<h3 class="text-xl font-semibold mb-3">Error Handling</h3>
+<p class="text-gray-600">Robust error handling and notification systems to ensure your workflows run smoothly.</p>
+</div>
+<div class="feature-card p-8 rounded-lg shadow-md stagger-item">
+<div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-6">
+<i class="ri-database-2-line ri-2x text-indigo-500"></i>
+</div>
+<h3 class="text-xl font-semibold mb-3">Data Transformation</h3>
+<p class="text-gray-600">Transform, filter, and manipulate data between services with powerful mapping tools.</p>
+</div>
+</div>
+</div>
+<!-- Floating Elements -->
+<div class="absolute top-20 left-10 w-20 h-20 bg-blue-500/10 rounded-full floating" style="animation-delay: 0s;"></div>
+<div class="absolute bottom-20 right-10 w-32 h-32 bg-green-500/10 rounded-full floating" style="animation-delay: 1s;"></div>
+<div class="absolute top-1/2 right-1/4 w-16 h-16 bg-purple-500/10 rounded-full floating" style="animation-delay: 2s;"></div>
+</section>
+<!-- Workflow Showcase -->
+<section id="workflows" class="py-20 bg-white">
+<div class="container mx-auto px-6">
+<div class="text-center mb-16 fade-in">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Automation Solutions</h2>
+<p class="text-lg text-gray-600 max-w-3xl mx-auto">Discover how our automation platform can transform your business processes with powerful integrations and workflows.</p>
+<div class="flex justify-center gap-4 mt-8">
+<button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary border-b-2 border-transparent hover:border-primary transition-all">All Solutions</button>
+<button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary border-b-2 border-transparent hover:border-primary transition-all">Business</button>
+<button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary border-b-2 border-transparent hover:border-primary transition-all">Marketing</button>
+<button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary border-b-2 border-transparent hover:border-primary transition-all">Development</button>
+<button class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-primary border-b-2 border-transparent hover:border-primary transition-all">Data</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="workflow-card bg-white rounded-lg shadow-md overflow-hidden stagger-item">
+<div class="h-48 overflow-hidden relative group">
+<img src="https://readdy.ai/api/search-image?query=professional%20automation%20dashboard%20interface%20with%20connected%20workflow%20nodes%2C%20showing%20real-time%20data%20processing%20and%20integration%20between%20multiple%20systems%2C%20clean%20modern%20design%20with%20subtle%20gradients%20and%20shadows&width=600&height=400&seq=workflow1&orientation=landscape" alt="Enterprise Integration" class="w-full h-full object-cover workflow-image">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+<span class="text-white text-sm font-medium">Enterprise-grade automation platform</span>
+</div>
+</div>
+<div class="p-6">
+<h3 class="text-xl font-semibold mb-2">Enterprise Integration Hub</h3>
+<p class="text-gray-600 mb-4">Create seamless connections between your business systems with our enterprise automation platform.</p>
+<div class="flex items-center gap-2 mb-4">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-database-2-line text-primary"></i>
+</div>
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-cloud-line text-secondary"></i>
+</div>
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-api-fill text-purple-500"></i>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">API</span>
+<span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Data Sync</span>
+<span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Webhooks</span>
+</div>
+<a href="#" class="text-primary hover:text-primary/80 font-medium flex items-center">
+View Details
+<i class="ri-arrow-right-line ri-fw ml-1"></i>
+</a>
+</div>
+</div>
+<div class="workflow-card bg-white rounded-lg shadow-md overflow-hidden stagger-item">
+<div class="h-48 overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=n8n%20workflow%20interface%20showing%20email%20automation%20sequence%20with%20multiple%20connected%20nodes%2C%20professional%20screenshot%20of%20automation%20software%20with%20green%20email%20nodes%2C%20clean%20interface%20design%2C%20showing%20email%20marketing%20workflow&width=600&height=400&seq=workflow2&orientation=landscape" alt="Email Automation Workflow" class="w-full h-full object-cover workflow-image">
+</div>
+<div class="p-6">
+<h3 class="text-xl font-semibold mb-2">Email Marketing Automation</h3>
+<p class="text-gray-600 mb-4">Trigger personalized email sequences based on user actions and engagement.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Email</span>
+<span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Marketing</span>
+<span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Triggers</span>
+</div>
+<a href="#" class="text-primary hover:text-primary/80 font-medium flex items-center">
+View Details
+<i class="ri-arrow-right-line ri-fw ml-1"></i>
+</a>
+</div>
+</div>
+<div class="workflow-card bg-white rounded-lg shadow-md overflow-hidden stagger-item">
+<div class="h-48 overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=n8n%20workflow%20interface%20showing%20data%20transformation%20and%20filtering%20nodes%2C%20professional%20screenshot%20of%20automation%20software%20with%20orange%20data%20nodes%20connected%20by%20lines%2C%20clean%20interface%20design%2C%20showing%20data%20processing%20workflow&width=600&height=400&seq=workflow3&orientation=landscape" alt="Data Processing Workflow" class="w-full h-full object-cover workflow-image">
+</div>
+<div class="p-6">
+<h3 class="text-xl font-semibold mb-2">Data Processing Pipeline</h3>
+<p class="text-gray-600 mb-4">Transform, filter, and enrich data from multiple sources into a unified format.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">ETL</span>
+<span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded">Data Processing</span>
+<span class="bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded">Filtering</span>
+</div>
+<a href="#" class="text-primary hover:text-primary/80 font-medium flex items-center">
+View Details
+<i class="ri-arrow-right-line ri-fw ml-1"></i>
+</a>
+</div>
+</div>
+<div class="workflow-card bg-white rounded-lg shadow-md overflow-hidden stagger-item">
+<div class="h-48 overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=n8n%20workflow%20interface%20showing%20social%20media%20automation%20with%20multiple%20platform%20nodes%20connected%2C%20professional%20screenshot%20of%20automation%20software%20with%20purple%20social%20media%20nodes%2C%20clean%20interface%20design%2C%20showing%20social%20media%20posting%20workflow&width=600&height=400&seq=workflow4&orientation=landscape" alt="Social Media Automation" class="w-full h-full object-cover workflow-image">
+</div>
+<div class="p-6">
+<h3 class="text-xl font-semibold mb-2">Social Media Automation</h3>
+<p class="text-gray-600 mb-4">Schedule and publish content across multiple social media platforms automatically.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Social Media</span>
+<span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Content</span>
+<span class="bg-pink-100 text-pink-800 text-xs font-medium px-2.5 py-0.5 rounded">Scheduling</span>
+</div>
+<a href="#" class="text-primary hover:text-primary/80 font-medium flex items-center">
+View Details
+<i class="ri-arrow-right-line ri-fw ml-1"></i>
+</a>
+</div>
+</div>
+<div class="workflow-card bg-white rounded-lg shadow-md overflow-hidden stagger-item">
+<div class="h-48 overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=n8n%20workflow%20interface%20showing%20CRM%20integration%20with%20customer%20data%20nodes%2C%20professional%20screenshot%20of%20automation%20software%20with%20blue%20and%20green%20CRM%20nodes%20connected%20by%20lines%2C%20clean%20interface%20design%2C%20showing%20customer%20data%20workflow&width=600&height=400&seq=workflow5&orientation=landscape" alt="CRM Integration" class="w-full h-full object-cover workflow-image">
+</div>
+<div class="p-6">
+<h3 class="text-xl font-semibold mb-2">CRM Integration Suite</h3>
+<p class="text-gray-600 mb-4">Synchronize customer data across your CRM, email marketing, and support platforms.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">CRM</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Customer Data</span>
+<span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Integration</span>
+</div>
+<a href="#" class="text-primary hover:text-primary/80 font-medium flex items-center">
+View Details
+<i class="ri-arrow-right-line ri-fw ml-1"></i>
+</a>
+</div>
+</div>
+<div class="workflow-card bg-white rounded-lg shadow-md overflow-hidden stagger-item">
+<div class="h-48 overflow-hidden">
+<img src="https://readdy.ai/api/search-image?query=n8n%20workflow%20interface%20showing%20e-commerce%20order%20processing%20automation%2C%20professional%20screenshot%20of%20automation%20software%20with%20shopping%20cart%20and%20payment%20nodes%20connected%20by%20lines%2C%20clean%20interface%20design%2C%20showing%20e-commerce%20workflow&width=600&height=400&seq=workflow6&orientation=landscape" alt="E-commerce Automation" class="w-full h-full object-cover workflow-image">
+</div>
+<div class="p-6">
+<h3 class="text-xl font-semibold mb-2">E-commerce Order Processing</h3>
+<p class="text-gray-600 mb-4">Automate order fulfillment, inventory updates, and customer notifications.</p>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">E-commerce</span>
+<span class="bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded">Orders</span>
+<span class="bg-teal-100 text-teal-800 text-xs font-medium px-2.5 py-0.5 rounded">Inventory</span>
+</div>
+<a href="#" class="text-primary hover:text-primary/80 font-medium flex items-center">
+View Details
+<i class="ri-arrow-right-line ri-fw ml-1"></i>
+</a>
+</div>
+</div>
+</div>
+<div class="text-center mt-12 fade-in">
+<a href="#" class="glow-button inline-block bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-8 !rounded-button shadow-lg transition-all duration-300 whitespace-nowrap">
+View All Workflows
+</a>
+</div>
+</div>
+</section>
+<!-- Interactive Documentation -->
+<section id="documentation" class="py-20 bg-gray-50">
+<div class="container mx-auto px-6">
+<div class="text-center mb-16 fade-in">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Interactive Documentation</h2>
+<p class="text-lg text-gray-600 max-w-3xl mx-auto">Comprehensive guides and tutorials to help you master automation workflows.</p>
+</div>
+<div class="bg-white rounded-lg shadow-md overflow-hidden fade-in">
+<div class="flex flex-col md:flex-row">
+<!-- Navigation Sidebar -->
+<div class="w-full md:w-1/4 bg-gray-50 p-6 border-r border-gray-200">
+<div class="mb-6">
+<div class="relative">
+<input type="text" placeholder="Search documentation..." class="w-full pl-10 pr-4 py-2 border-none bg-white rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<i class="ri-search-line text-gray-400"></i>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<button class="doc-section-toggle flex items-center justify-between w-full text-left font-medium text-gray-700 hover:text-primary">
+<span>Getting Started</span>
+<i class="ri-arrow-down-s-line transition-transform duration-200"></i>
+</button>
+<div class="doc-section-content mt-2 ml-4 space-y-2">
+<a href="#" class="block text-sm text-gray-600 hover:text-primary py-1">Introduction to n8n</a>
+<a href="#" class="block text-sm text-gray-600 hover:text-primary py-1">Installation Guide</a>
+<a href="#" class="block text-sm text-gray-600 hover:text-primary py-1">First Workflow</a>
+<a href="#" class="block text-sm text-primary font-medium py-1">Core Concepts</a>
+</div>
+</div>
+<div>
+<button class="doc-section-toggle flex items-center justify-between w-full text-left font-medium text-gray-700 hover:text-primary">
+<span>Node Types</span>
+<i class="ri-arrow-down-s-line transition-transform duration-200"></i>
+</button>
+<div class="doc-section-content mt-2 ml-4 space-y-2 hidden">
+<a href="#" class="block text-sm text-gray-600 hover:text-primary py-1">Trigger Nodes</a>
+<a href="#" class="block text-sm text-gray-600 hover:text-primary py-1">Action Nodes</a>
+<a href="#" class="block text-sm text-gray-600 hover:text-primary py-1">Flow Nodes</a>
+</div>
+</div>
+<div>
+<button class="doc-section-toggle flex items-center justify-between w-full text-left font-medium text-gray-700 hover:text-primary">
+<span>Advanced Usage</span>
+<i class="ri-arrow-down-s-line transition-transform duration-200"></i>
+</button>
+<div class="doc-section-content mt-2 ml-4 space-y-2 hidden">
+<a href="#" class="block text-sm text-gray-600 hover:text-primary py-1">Custom JavaScript</a>
+<a href="#" class="block text-sm text-gray-600 hover:text-primary py-1">Error Handling</a>
+<a href="#" class="block text-sm text-gray-600 hover:text-primary py-1">Webhooks</a>
+</div>
+</div>
+<div>
+<button class="doc-section-toggle flex items-center justify-between w-full text-left font-medium text-gray-700 hover:text-primary">
+<span>Integrations</span>
+<i class="ri-arrow-down-s-line transition-transform duration-200"></i>
+</button>
+<div class="doc-section-content mt-2 ml-4 space-y-2 hidden">
+<a href="#" class="block text-sm text-gray-600 hover:text-primary py-1">API Connections</a>
+<a href="#" class="block text-sm text-gray-600 hover:text-primary py-1">Database Integrations</a>
+<a href="#" class="block text-sm text-gray-600 hover:text-primary py-1">Third-party Services</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Content Area -->
+<div class="w-full md:w-3/4 p-8">
+<div class="prose max-w-none">
+<h3 class="text-2xl font-bold mb-4">Core Concepts</h3>
+<p class="mb-4">Understanding the fundamental concepts of n8n will help you create more efficient and powerful workflows. Here are the key concepts you should know:</p>
+<div class="mb-6">
+<h4 class="text-xl font-semibold mb-2">Nodes</h4>
+<p>Nodes are the building blocks of any workflow in n8n. Each node represents a specific action, trigger, or service integration.</p>
+<div class="bg-gray-50 p-4 rounded-lg mt-3 mb-4">
+<div class="flex items-start">
+<div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4 mt-1">
+<i class="ri-function-line text-primary text-xl"></i>
+</div>
+<div>
+<h5 class="font-medium">Function Node</h5>
+<p class="text-sm text-gray-600">Allows you to write custom JavaScript code to transform data or add custom logic to your workflow.</p>
+</div>
+</div>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg mb-4">
+<div class="flex items-start">
+<div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
+<i class="ri-timer-line text-secondary text-xl"></i>
+</div>
+<div>
+<h5 class="font-medium">Trigger Node</h5>
+<p class="text-sm text-gray-600">Starts a workflow based on an event, schedule, or webhook.</p>
+</div>
+</div>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg">
+<div class="flex items-start">
+<div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4 mt-1">
+<i class="ri-api-line text-purple-600 text-xl"></i>
+</div>
+<div>
+<h5 class="font-medium">API Node</h5>
+<p class="text-sm text-gray-600">Connects to external services and APIs to send or retrieve data.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mb-6">
+<h4 class="text-xl font-semibold mb-2">Connections</h4>
+<p>Connections define how data flows between nodes in your workflow. Each connection represents the path that data takes from one node to another.</p>
+<div class="my-6">
+<img src="https://readdy.ai/api/search-image?query=n8n%20workflow%20showing%20node%20connections%20with%20arrows%20between%20nodes%2C%20professional%20diagram%20of%20automation%20software%20with%20clear%20connection%20lines%20between%20workflow%20steps%2C%20clean%20interface%20design%2C%20showing%20data%20flow%20between%20nodes&width=800&height=400&seq=connections&orientation=landscape" alt="Node Connections" class="w-full rounded-lg shadow-md">
+</div>
+</div>
+<div class="mb-6">
+<h4 class="text-xl font-semibold mb-2">Data Mapping</h4>
+<p>Data mapping allows you to transform data between nodes, ensuring that the output of one node matches the required input format of the next node.</p>
+<div class="bg-gray-100 p-4 rounded-lg my-4">
+<pre class="text-sm overflow-x-auto"><code>// Example of data mapping in Function node
+return items.map(item => {
+return {
+json: {
+fullName: `${item.json.firstName} ${item.json.lastName}`,
+email: item.json.email.toLowerCase(),
+formattedDate: new Date(item.json.timestamp).toISOString()
+}
+};
+});</code></pre>
+</div>
+</div>
+<div class="flex justify-between mt-8 pt-4 border-t border-gray-200">
+<a href="#" class="text-primary hover:text-primary/80 font-medium flex items-center">
+<i class="ri-arrow-left-line ri-fw mr-1"></i>
+Previous: Installation Guide
+</a>
+<a href="#" class="text-primary hover:text-primary/80 font-medium flex items-center">
+Next: Creating Your First Workflow
+<i class="ri-arrow-right-line ri-fw ml-1"></i>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Use Cases Section -->
+<section class="py-20 bg-white">
+<div class="container mx-auto px-6">
+<div class="text-center mb-16 fade-in">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Real-World Use Cases</h2>
+<p class="text-lg text-gray-600 max-w-3xl mx-auto">Discover how businesses are transforming their operations with our automation solutions.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+<div class="bg-white rounded-lg shadow-md p-8 stagger-item">
+<div class="flex items-start mb-6">
+<div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+<i class="ri-store-2-line text-primary text-2xl"></i>
+</div>
+<div>
+<h3 class="text-xl font-semibold mb-2">E-commerce Operations</h3>
+<p class="text-gray-600">Automated order processing, inventory management, and customer communications for a leading online retailer, reducing manual tasks by 85%.</p>
+</div>
+</div>
+<img src="https://readdy.ai/api/search-image?query=modern%20e-commerce%20dashboard%20showing%20order%20processing%20and%20inventory%20management%20interface%2C%20professional%20business%20software%20screenshot%20with%20data%20visualization%2C%20clean%20modern%20design&width=600&height=300&seq=usecase1&orientation=landscape" alt="E-commerce Automation" class="w-full h-48 object-cover rounded-lg">
+</div>
+<div class="bg-white rounded-lg shadow-md p-8 stagger-item">
+<div class="flex items-start mb-6">
+<div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mr-4">
+<i class="ri-customer-service-2-line text-secondary text-2xl"></i>
+</div>
+<div>
+<h3 class="text-xl font-semibold mb-2">Customer Support</h3>
+<p class="text-gray-600">Integrated ticketing system with automated response routing and status updates, improving response time by 60%.</p>
+</div>
+</div>
+<img src="https://readdy.ai/api/search-image?query=customer%20support%20dashboard%20interface%20showing%20ticket%20management%20and%20automated%20routing%20system%2C%20professional%20help%20desk%20software%20screenshot%20with%20clean%20modern%20design&width=600&height=300&seq=usecase2&orientation=landscape" alt="Support Automation" class="w-full h-48 object-cover rounded-lg">
+</div>
+<div class="bg-white rounded-lg shadow-md p-8 stagger-item">
+<div class="flex items-start mb-6">
+<div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+<i class="ri-line-chart-line text-purple-600 text-2xl"></i>
+</div>
+<div>
+<h3 class="text-xl font-semibold mb-2">Marketing Analytics</h3>
+<p class="text-gray-600">Automated data collection and reporting across multiple marketing channels, saving 20 hours per week in manual reporting.</p>
+</div>
+</div>
+<img src="https://readdy.ai/api/search-image?query=marketing%20analytics%20dashboard%20showing%20data%20visualization%20and%20campaign%20performance%20metrics%2C%20professional%20marketing%20software%20screenshot%20with%20graphs%20and%20charts%2C%20clean%20modern%20design&width=600&height=300&seq=usecase3&orientation=landscape" alt="Marketing Analytics" class="w-full h-48 object-cover rounded-lg">
+</div>
+<div class="bg-white rounded-lg shadow-md p-8 stagger-item">
+<div class="flex items-start mb-6">
+<div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mr-4">
+<i class="ri-team-line text-orange-500 text-2xl"></i>
+</div>
+<div>
+<h3 class="text-xl font-semibold mb-2">HR Process Automation</h3>
+<p class="text-gray-600">Streamlined employee onboarding and document management workflow, reducing processing time by 70%.</p>
+</div>
+</div>
+<img src="https://readdy.ai/api/search-image?query=HR%20management%20dashboard%20showing%20employee%20onboarding%20and%20document%20workflow%20interface%2C%20professional%20HR%20software%20screenshot%20with%20clean%20modern%20design&width=600&height=300&seq=usecase4&orientation=landscape" alt="HR Automation" class="w-full h-48 object-cover rounded-lg">
+</div>
+</div>
+<div class="text-center fade-in">
+<a href="#" class="glow-button inline-block bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-8 !rounded-button shadow-lg transition-all duration-300 whitespace-nowrap">
+Explore More Use Cases
+<i class="ri-arrow-right-line ri-fw ml-1"></i>
+</a>
+</div>
+</div>
+</section>
+<!-- Scripts -->
+<script id="mobile-menu-script">
+document.addEventListener('DOMContentLoaded', function() {
+const mobileMenuButton = document.getElementById('mobile-menu-button');
+const mobileMenu = document.getElementById('mobile-menu');
+mobileMenuButton.addEventListener('click', function() {
+mobileMenu.classList.toggle('hidden');
+// Toggle icon
+const icon = mobileMenuButton.querySelector('i');
+if (mobileMenu.classList.contains('hidden')) {
+icon.classList.remove('ri-close-line');
+icon.classList.add('ri-menu-line');
+} else {
+icon.classList.remove('ri-menu-line');
+icon.classList.add('ri-close-line');
+}
+});
+});
+</script>
+<script id="typing-effect-script">
+document.addEventListener('DOMContentLoaded', function() {
+const typingText = document.getElementById('typing-text');
+const text = typingText.textContent;
+typingText.textContent = '';
+let i = 0;
+function typeWriter() {
+if (i < text.length) {
+typingText.textContent += text.charAt(i);
+i++;
+setTimeout(typeWriter, 100);
+} else {
+typingText.classList.remove('typing-effect');
+}
+}
+typeWriter();
+});
+</script>
+<script id="particles-script">
+document.addEventListener('DOMContentLoaded', function() {
+const particlesContainer = document.getElementById('particles-container');
+function createParticle() {
+const particle = document.createElement('div');
+particle.classList.add('particle');
+// Random size between 3px and 8px
+const size = Math.random() * 5 + 3;
+particle.style.width = `${size}px`;
+particle.style.height = `${size}px`;
+// Random position
+const posX = Math.random() * 100;
+const posY = Math.random() * 100;
+particle.style.left = `${posX}%`;
+particle.style.top = `${posY}%`;
+// Random opacity
+particle.style.opacity = Math.random() * 0.5 + 0.1;
+// Add to container
+particlesContainer.appendChild(particle);
+// Remove after animation
+setTimeout(() => {
+particle.remove();
+}, 8000);
+}
+// Create particles at intervals
+setInterval(createParticle, 200);
+// Create initial particles
+for (let i = 0; i < 20; i++) {
+createParticle();
+}
+});
+</script>
+<script id="custom-cursor-script">
+document.addEventListener('DOMContentLoaded', function() {
+const cursor = document.getElementById('custom-cursor');
+document.addEventListener('mousemove', function(e) {
+cursor.style.left = e.clientX + 'px';
+cursor.style.top = e.clientY + 'px';
+});
+// Hide cursor when mouse leaves window
+document.addEventListener('mouseout', function() {
+cursor.style.opacity = '0';
+});
+// Show cursor when mouse enters window
+document.addEventListener('mouseover', function() {
+cursor.style.opacity = '1';
+});
+// Increase cursor size on clickable elements
+const clickables = document.querySelectorAll('a, button, .workflow-card, .feature-card');
+clickables.forEach(element => {
+element.addEventListener('mouseenter', function() {
+cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+cursor.style.mixBlendMode = 'difference';
+});
+element.addEventListener('mouseleave', function() {
+cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+cursor.style.mixBlendMode = 'difference';
+});
+});
+});
+</script>
+<script id="scroll-animation-script">
+document.addEventListener('DOMContentLoaded', function() {
+const fadeElements = document.querySelectorAll('.fade-in');
+const staggerItems = document.querySelectorAll('.stagger-item');
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('visible');
+}
+});
+}, { threshold: 0.1 });
+fadeElements.forEach(element => {
+observer.observe(element);
+});
+// Stagger animation for items
+const staggerObserver = new IntersectionObserver((entries, observer) => {
+let delay = 0;
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+setTimeout(() => {
+entry.target.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+entry.target.style.opacity = '1';
+entry.target.style.transform = 'translateY(0)';
+}, delay);
+delay += 100;
+observer.unobserve(entry.target);
+}
+});
+}, { threshold: 0.1 });
+staggerItems.forEach(item => {
+staggerObserver.observe(item);
+});
+});
+</script>
+<script id="documentation-toggle-script">
+document.addEventListener('DOMContentLoaded', function() {
+const toggleButtons = document.querySelectorAll('.doc-section-toggle');
+toggleButtons.forEach(button => {
+button.addEventListener('click', function() {
+const content = this.nextElementSibling;
+const icon = this.querySelector('i');
+content.classList.toggle('hidden');
+if (content.classList.contains('hidden')) {
+icon.style.transform = 'rotate(0deg)';
+} else {
+icon.style.transform = 'rotate(180deg)';
+}
+});
+});
+});
+</script>
 </body>
 </html>
